@@ -1,0 +1,53 @@
+import { createSlice } from "@reduxjs/toolkit";
+
+const initialState = {
+  idCount: 3, // idを連番で付与するため
+  tasks: [
+    {
+      id: 1,
+      title: "Task A",
+      completed: false,
+    },
+    {
+      id: 2,
+      title: "Task B",
+      completed: true,
+    },
+    {
+      id: 3,
+      title: "Task C",
+      completed: false,
+    },
+  ],
+};
+
+export const taskSlice = createSlice({
+  name: "task",
+  initialState,
+  reducers: {
+    newTask: (state, action) => {
+      state.idCount += 1;
+      const newItem = {
+        id: state.idCount,
+        title: action.payload,
+        completed: false,
+      };
+      state.tasks = [...state.tasks, newItem];
+    },
+    completeTask: (state, action) => {
+      const task = state.tasks.find((t) => t.id === action.payload.id);
+      if (task) {
+        task.completed = !task.completed;
+      }
+    },
+    deleteTask: (state, action) => {
+      state.tasks = state.tasks.filter((t) => t.id !== action.payload.id);
+    },
+  },
+});
+
+export const { newTask, completeTask, deleteTask } = taskSlice.actions;
+
+export const selectTasks = (state) => state.task.tasks;
+
+export default taskSlice.reducer;
